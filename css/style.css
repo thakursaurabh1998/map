@@ -37,12 +37,6 @@ body {
 	margin-top: 15px;
 }
 
-.button-pos {
-    /*top: 344px;*/
-    left: 344px;
-    width: 112px;
-}
-
 .search-btn-pos {
 	margin-top: 20px;
 }
@@ -58,10 +52,11 @@ body {
 
 .floating-panel {
     position: absolute;
-    bottom: 54px;
-    left: 54px;
+    bottom: 14px;
+    left: 14px;
     z-index: 5;
-    right:5%;
+    right:14px;
+    max-height: 90%;
     /*background-color: #fff;*/
     /*padding: 5px;*/
     /*border: 1px solid #999;*/
