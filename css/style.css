@@ -2,6 +2,7 @@ body {
     height: 100%;
     margin: 0;
     padding: 0;
+
 }
 
 #map {
@@ -12,15 +13,15 @@ body {
     right: 0px;
 }
 
+
+
 #wrapper {
     position: relative;
 }
 
 .noflex {
-    width: 449px;
+    width: 100%;
 }
-
-
 
 .nopadding {
     padding: 0;
@@ -40,14 +41,11 @@ body {
     /*top: 344px;*/
     left: 344px;
     width: 112px;
-    height: 112px;
-    bottom: 0;
 }
 
 .search-btn-pos {
 	margin-top: 20px;
 }
-
 
 /*.icon-menu {
 	width: 100px;
@@ -60,9 +58,10 @@ body {
 
 .floating-panel {
     position: absolute;
-    bottom: 0;
-    left: 5%;
+    bottom: 54px;
+    left: 54px;
     z-index: 5;
+    right:5%;
     /*background-color: #fff;*/
     /*padding: 5px;*/
     /*border: 1px solid #999;*/
@@ -78,5 +77,12 @@ body {
     a {
         color: #fff;
         text-decoration: underline;
+    }
+}
+
+@media only screen and (min-width: 570px){
+
+    .noflex {
+        width: 500px;
     }
 }
