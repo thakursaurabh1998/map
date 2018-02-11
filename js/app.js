@@ -38,13 +38,32 @@ function initMap() {
         mapTypeControl: false
     });
 
+    var largeInfoWindow = new google.maps.InfoWindow();
+    var bounds = new google.maps.LatLngBounds();
+
+    
 
     navigator.geolocation.getCurrentPosition(function(position) {
         livePos = {
             lat: position.coords.latitude,
             lng: position.coords.longitude
         }
+
+        var posMarker = new google.maps.Marker({
+	        position: livePos,
+	        title: `${position.lat} ${position.lng}`,
+	        icon: {
+	            path: google.maps.SymbolPath.BACKWARD_OPEN_ARROW,
+	            scale: 4,
+	            strokeColor: "blue"
+	        },
+	        animation: google.maps.Animation.DROP,
+	    });
+
+	    posMarker.setMap(map);
+
         map.setCenter(livePos);
+
         var foursquareURL = `https://api.foursquare.com/v2/venues/explore?limit=5&ll=${livePos.lat},${livePos.lng}&client_id=${foursquare_client_id}&client_secret=${foursquare_client_secret}&v=20170801&query=`
 
     	types.forEach(function(type){
