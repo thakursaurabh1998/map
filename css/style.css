@@ -13,8 +13,6 @@ body {
     right: 0px;
 }
 
-
-
 #wrapper {
     position: relative;
 }
@@ -30,6 +28,7 @@ body {
 .header-collapse {
     cursor: default;
     padding: 0;
+    width: 56px;
     background-color: #fff0;
 }
 
@@ -37,33 +36,31 @@ body {
 	margin-top: 15px;
 }
 
-.search-btn-pos {
+.btn-pos {
 	margin-top: 20px;
+    margin-left: 20px;
 }
-
-/*.icon-menu {
-	width: 100px;
-}*/
 
 .borderN {
     border: 0;
     box-shadow: 0 0 0 #fff0;
 }
 
-.floating-panel {
+.floating-panel-close {
+    position: absolute;
+    bottom: 14px;
+    left: 14px;
+    z-index: 5;
+    max-height: 90%;
+}
+
+.floating-panel-open {
     position: absolute;
     bottom: 14px;
     left: 14px;
     z-index: 5;
     right:14px;
     max-height: 90%;
-    /*background-color: #fff;*/
-    /*padding: 5px;*/
-    /*border: 1px solid #999;*/
-    /*text-align: center;
-  font-family: 'Roboto','sans-serif';*/
-    /*line-height: 30px;*/
-    /*padding-left: 10px;*/
 }
 
 .tap-target {
@@ -75,9 +72,26 @@ body {
     }
 }
 
+::placeholder{
+    opacity: 0;
+}
+
 @media only screen and (min-width: 570px){
 
     .noflex {
         width: 500px;
+    }
+    
+    .explore-button {
+        right: calc(100%-570px);
+    }
+
+    .floating-panel-open {
+        position: absolute;
+        bottom: 14px;
+        left: 14px;
+        z-index: 5;
+        right: calc( 100% - 519px );
+        max-height: 90%;
     }
 }

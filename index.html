@@ -13,10 +13,10 @@
 
 <body>
     <div id="map"></div>
-    <div class="floating-panel">
+    <div class="floating-panel-close" id="float">
         <ul class="collapsible noshadow borderN" data-collapsible="accordion">
             <li>
-                <div class="collapsible-header header-collapse borderN active">
+                <div class="collapsible-header header-collapse borderN">
                     <a id="menu" class="btn-floating btn-large waves-effect waves-light blue"><i class="material-icons">explore</i></a>
                 </div>
                 <div class="collapsible-body nopadding borderN">
@@ -26,7 +26,8 @@
                                 <div class="card-content">
                                     <div class="row">
                                         <div class="col s12">
-                                            <h5>Search nearby locations</h5></div>
+                                            <h5>Search nearby locations</h5>
+                                        </div>
                                     </div>
                                     <div class="row">
                                         <div class="input-field col s9">
@@ -35,26 +36,39 @@
                                             <label for="search-bar-text">Enter places to search</label>
                                         </div>
                                         <div class="col s2">
-                                            <button class="search-btn-pos btn btn-small waves-effect waves-light blue" type="submit" id="search-button" name="action"><i class="material-icons">search</i>
+                                            <button class="btn-pos btn btn-small waves-effect waves-light blue" type="submit" id="search-button" name="action"><i class="material-icons">search</i>
                                             </button>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col input-field s6">
-                                            <select data-bind="foreach: categoryList">
-                                                <option data-bind="text: $data"></option>
-                                            </select>
+                                            <!-- <select data-bind="foreach: categoryList">
+                                                <option data-bind="text: $data, click: function(){console.log('hello');}"></option>
+                                            </select> -->
+                                            <select data-bind="options: categoryList, optionsCaption: 'Choose one...', value: currentCategory"></select>
                                             <label>Places</label>
                                         </div>
+                                        <div class="col s3">
+                                            <button data-bind="click: changePlace" class="btn-pos btn btn-small waves-effect waves-light blue" id="marker-disp">
+                                                <i class="material-icons">place</i>
+                                            </button>
+                                        </div>
+                                        <div class="col s3">
+                                            <button class="btn-pos btn btn-small waves-effect waves-light blue" id="marker-hide">
+                                                <i class="material-icons">location_off</i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="row">
                                         <div class="col s6">
-                                            <button class="search-btn-pos btn btn-small waves-effect waves-light blue" id="marker-disp">
-                                                <i class="material-icons">navigation</i>
+                                            <button class="btn btn-small waves-effect waves-light blue" id="all-markers">
+                                                <i class="material-icons right">local_activity</i>See all places
                                             </button>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="card-action">
-                                    <p data-bind="text: name">odskf</p>
+                                    <p data-bind="text: currentCategory"></p>
                                 </div>
                             </div>
                         </div>
