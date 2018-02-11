@@ -106,7 +106,7 @@ function showMarkers() {
         markers[i].setMap(map);
         bounds.extend(markers[i].position);
     }
-    // map.fitBounds(bounds);
+    map.fitBounds(bounds);
 }
 
 function populateInfoWindow(marker, infoWindow) {
