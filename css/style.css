@@ -38,7 +38,6 @@ body {
 
 .btn-pos {
 	margin-top: 20px;
-    margin-left: 20px;
 }
 
 .borderN {
@@ -63,6 +62,15 @@ body {
     max-height: 90%;
 }
 
+.gps-floating-panel {
+    position: absolute;
+    top:46px;
+    right:14px;
+    z-index: 5;
+    width: 56px;
+    height: 56px;
+}
+
 .tap-target {
     color: #fff;
     background-color: #2bbbad;
@@ -74,6 +82,10 @@ body {
 
 ::placeholder{
     opacity: 0;
+}
+
+.full {
+    width: 100%;
 }
 
 @media only screen and (min-width: 570px){

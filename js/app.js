@@ -23,6 +23,7 @@ function findArea() {
             if (status == google.maps.GeocoderStatus.OK) {
             	searchLocation = results[0].geometry.location
                 map.setCenter(searchLocation);
+                map.setZoom(15);
                 searchLocation = {lat: searchLocation.lat(), lng: searchLocation.lng()};
                 createJSON(searchLocation);                
             } else {
@@ -32,22 +33,8 @@ function findArea() {
     }
 }
 
-function initMap() {
-	var defaultLocation = { lat: 40.7413549, lng: -73.9980244 };
-    var placeAutocomplete = new google.maps.places.Autocomplete(document.getElementById('search-bar-text'));
-
-    map = new google.maps.Map(document.getElementById('map'), {
-        center: defaultLocation,
-        zoom: 13,
-        mapTypeControl: false
-    });
-
-    var largeInfoWindow = new google.maps.InfoWindow();
-    var bounds = new google.maps.LatLngBounds();
-
-    createJSON(defaultLocation);
-
-    navigator.geolocation.getCurrentPosition(function(position) {
+function gps() {
+	navigator.geolocation.getCurrentPosition(function(position) {
         livePos = {
             lat: position.coords.latitude,
             lng: position.coords.longitude
@@ -69,10 +56,36 @@ function initMap() {
 	    posMarker.setMap(map);
 
         map.setCenter(livePos);
+
+        map.setZoom(15);
+    });
+}
+
+function showAllMarkers(){
+	var bounds = new google.maps.LatLngBounds();
+    for (var i = 0; i < allMarkers.length; i++) {
+        allMarkers[i].setMap(map);
+        bounds.extend(allMarkers[i].position);
+    }
+    map.fitBounds(bounds);
+};
+
+function initMap() {
+	var defaultLocation = { lat: 40.7413549, lng: -73.9980244 };
+    var placeAutocomplete = new google.maps.places.Autocomplete(document.getElementById('search-bar-text'));
+
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: defaultLocation,
+        zoom: 13,
+        mapTypeControl: false
     });
 
-    
+    var largeInfoWindow = new google.maps.InfoWindow();
+    var bounds = new google.maps.LatLngBounds();
 
+    createJSON(defaultLocation);
+
+    gps();
 
     $('#search-button').click(function() {
         findArea();
@@ -83,7 +96,11 @@ function initMap() {
     $('#marker-hide').click(function(){
     	hideMarkers();
     });
+    $('#gps').click(function(){
+    	gps();
+    });
 }
+
 
 function createJSON(livePos){
 
@@ -148,15 +165,6 @@ function showMarkers() {
     }
     map.fitBounds(bounds);
 }
-
-function showAllMarkers(){
-	var bounds = new google.maps.LatLngBounds();
-    for (var i = 0; i < allMarkers.length; i++) {
-        allMarkers[i].setMap(map);
-        bounds.extend(allMarkers[i].position);
-    }
-    map.fitBounds(bounds);
-};
 
 function hideAllMarkers() {
     for (var i = 0; i < allMarkers.length; i++) {
