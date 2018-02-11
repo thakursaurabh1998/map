@@ -16,9 +16,8 @@
     <div class="floating-panel">
         <ul class="collapsible noshadow borderN" data-collapsible="accordion">
             <li>
-                <div class="collapsible-header header-collapse borderN">
+                <div class="collapsible-header header-collapse borderN active">
                     <a id="menu" class="btn-floating btn-large waves-effect waves-light blue"><i class="material-icons">explore</i></a>
-                    
                 </div>
                 <div class="collapsible-body nopadding borderN">
                     <div class="row">
@@ -26,22 +25,36 @@
                             <div class="card">
                                 <div class="card-content">
                                     <div class="row">
-                                        <div class="col s12"><h5>Search nearby locations</h5></div>
+                                        <div class="col s12">
+                                            <h5>Search nearby locations</h5></div>
                                     </div>
                                     <div class="row">
                                         <div class="input-field col s9">
                                             <i class="material-icons prefix search-btn2-pos">search</i>
-                                          <input id="search-bar-text" type="text" class="validate">
-                                          <label for="search-bar-text">Enter places to search</label>
+                                            <input id="search-bar-text" type="text" class="validate">
+                                            <label for="search-bar-text">Enter places to search</label>
                                         </div>
                                         <div class="col s2">
                                             <button class="search-btn-pos btn btn-small waves-effect waves-light blue" type="submit" id="search-button" name="action"><i class="material-icons">search</i>
                                             </button>
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col input-field s6">
+                                            <select data-bind="foreach: categoryList">
+                                                <option data-bind="text: $data"></option>
+                                            </select>
+                                            <label>Places</label>
+                                        </div>
+                                        <div class="col s6">
+                                            <button class="search-btn-pos btn btn-small waves-effect waves-light blue" id="marker-disp">
+                                                <i class="material-icons">navigation</i>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="card-action">
-                                    <a href="#">This is a link</a>
+                                    <p data-bind="text: name">odskf</p>
                                 </div>
                             </div>
                         </div>
@@ -57,11 +70,11 @@
             </div>
         </div>
     </div> -->
-    <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyBZmyyZG4VReSyxvi9tgTf7KbM7ElSgnn4&v=3&callback=initMap"></script>
-    <script src="js/jquery.min.js"></script>
-    <script src="js/knockout.js"></script>
-    <script src="materialize/js/materialize.min.js"></script>
-    <script src="js/app.js"></script>
+        <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyBZmyyZG4VReSyxvi9tgTf7KbM7ElSgnn4&v=3&callback=initMap"></script>
+        <script src="js/jquery.min.js"></script>
+        <script src="js/knockout.js"></script>
+        <script src="materialize/js/materialize.min.js"></script>
+        <script src="js/app.js"></script>
 </body>
 
 </html>
