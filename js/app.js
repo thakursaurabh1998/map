@@ -170,10 +170,12 @@ function createMarkers(type) {
         });
         markers.push(marker);
         allMarkers.push(marker);
-        marker.addListener('click', function() {
-            populateInfoWindow(this, largeInfoWindow);
-            toggleBounce(this);
-        });
+        // marker.addListener('click', function() {
+        //     populateInfoWindow(this, largeInfoWindow);
+        //     toggleBounce(this);
+        // });
+        marker.addListener('click',function(){populateInfoWindow(this, largeInfoWindow);});
+        marker.addListener('click',function(){toggleBounce(this);});
         bounds.extend(markers[i].position);
     }
 }
