@@ -40,6 +40,8 @@ function findArea() {
 /******************************************/
 
 function gps() {
+    markers = [];
+    allMarkers = [];
     navigator.geolocation.getCurrentPosition(function(position) {
         livePos = {
             lat: position.coords.latitude,
