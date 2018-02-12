@@ -38,4 +38,4 @@ Steps:
 * Autocompletion API completes the location search while the user is typing the location.
 * This website runs on material theme and is completely responsive and works beautifully for mobile devices as well as desktops.
 ---
-![Image mockup]((../master/img/mockup.png)
+![Image mockup](../master/img/mockup.png)
