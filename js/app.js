@@ -40,6 +40,7 @@ function findArea() {
 /******************************************/
 
 function gps() {
+    hideAllMarkers();
     markers = [];
     allMarkers = [];
     navigator.geolocation.getCurrentPosition(function(position) {
@@ -120,6 +121,7 @@ function initMap() {
 /************************************************/
 
 function createJSON(livePos) {
+    hideAllMarkers();
     allMarkers = [];
     markers = [];
     for (var i = 0; i < 4; i++) {
@@ -147,6 +149,7 @@ function createJSON(livePos) {
 /******************************************/
 
 function createMarkers(type) {
+    hideAllMarkers();
     markers = [];
     var largeInfoWindow = new google.maps.InfoWindow();
     var bounds = new google.maps.LatLngBounds();
