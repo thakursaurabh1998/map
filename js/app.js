@@ -3,12 +3,14 @@ var markers = [];
 var allMarkers = [];
 var foursquare_client_id = "3VU3JPF4MALSI0PRWMV1VEVPWXO0HXACAEJDDNSB5GDHH0ZG"
 var foursquare_client_secret = "YSBYZX0VSOEQO45P2D0MDM5OHKDFWKGSBUZ0JJXDK4S2W0AZ"
-// var foursquare_client_secret = "YSBYZX0VSOEQO45P2D0MDM5OHHDFWKGSBUZ0JJXDK4S2W0AZ"
-
-
 var short, searchLocation, posMarker, last, lastInfoWindow, bouncingMarker;
+  
+  /****************************************/
+ /* Finding places by searching location */
+/****************************************/
 
 function findArea() {
+    hideAllMarkers();
     var geocoder = new google.maps.Geocoder();
     var address = $('#search-bar-text').val();
     if (address == '') {
@@ -32,6 +34,10 @@ function findArea() {
         });
     }
 }
+
+  /******************************************/
+ /* Finding places by geolocation location */
+/******************************************/
 
 function gps() {
     navigator.geolocation.getCurrentPosition(function(position) {
@@ -57,6 +63,10 @@ function gps() {
     });
 }
 
+  /**********************************************/
+ /* Displaying markers of all the found places */
+/**********************************************/
+
 function showAllMarkers() {
     var bounds = new google.maps.LatLngBounds();
     for (var i = 0; i < allMarkers.length; i++) {
@@ -65,6 +75,10 @@ function showAllMarkers() {
     }
     map.fitBounds(bounds);
 };
+
+  /********************/
+ /* Initializing map */
+/********************/
 
 function initMap() {
     var defaultLocation = {
@@ -81,6 +95,9 @@ function initMap() {
     var bounds = new google.maps.LatLngBounds();
     createJSON(defaultLocation);
     gps();
+
+    /* Event listeners*/
+
     $('#search-button').click(function() {
         findArea();
     });
@@ -94,6 +111,11 @@ function initMap() {
         gps();
     });
 }
+
+   /************************************************/
+  /* Creating data in JSON format by making AJAX  */
+ /* calls asyncronously to the Foursquare server */
+/************************************************/
 
 function createJSON(livePos) {
     allMarkers = [];
@@ -114,9 +136,13 @@ function createJSON(livePos) {
             }
         }).error(function(){
             Materialize.toast("Sorry, the Foursquare API service didn't responded.", 4000)
-    },8000);
+        },8000);
     });
 }
+
+  /******************************************/
+ /* Creating markers for all the locations */
+/******************************************/
 
 function createMarkers(type) {
     markers = [];
@@ -137,12 +163,16 @@ function createMarkers(type) {
         markers.push(marker);
         allMarkers.push(marker);
         marker.addListener('click', function() {
-            // populateInfoWindow(this, largeInfoWindow);
+            populateInfoWindow(this, largeInfoWindow);
             toggleBounce(this);
         });
         bounds.extend(markers[i].position);
     }
 }
+
+  /**********************************************/
+ /* Displaying markers for specific categories */
+/**********************************************/
 
 function showMarkers() {
     hideAllMarkers();
@@ -154,11 +184,19 @@ function showMarkers() {
     map.fitBounds(bounds);
 }
 
+  /************************************/
+ /* Hiding markers for all locations */
+/************************************/
+
 function hideAllMarkers() {
     for (var i = 0; i < allMarkers.length; i++) {
         allMarkers[i].setMap(null);
     }
 }
+
+  /*****************************************/
+ /* Hiding markers for specific locations */
+/*****************************************/
 
 function hideMarkers() {
     for (var i = 0; i < markers.length; i++) {
@@ -166,6 +204,10 @@ function hideMarkers() {
     }
     hideAllMarkers();
 }
+
+  /***************************************************/
+ /* Bounce animation on the markers on click events */
+/***************************************************/
 
 function toggleBounce(marker) {
     if (last) last.setAnimation(null);
@@ -176,6 +218,11 @@ function toggleBounce(marker) {
     }
     last = marker;
 }
+
+   /************************************************/
+  /*  Populating info-window with the location's  */
+ /* information acquired from the foursquare API */
+/************************************************/
 
 function populateInfoWindow(marker, infoWindow) {
     if (lastInfoWindow) lastInfoWindow.close();
@@ -189,17 +236,34 @@ function populateInfoWindow(marker, infoWindow) {
     }
     lastInfoWindow = infoWindow;
 }
+
+  /*************************/
+ /* Document ready events */
+/*************************/
+
 $(function() {
     // $('.tap-target').tapTarget('open');
     $('select').material_select();
     $('#menu').click(function() {
         $('#float').toggleClass('floating-panel-open');
     });
-    // viewModel.populate;
+    setTimeout(function(){ vm.changePlace(); }, 5000);
+    
 });
-/**************************VIEWMODEL******************************/
+
+    /******************************************************************************************************/
+   /*/                                   /***********************/                                      /*/
+  /*/                                   /* Knockout View Model */                                      /*/
+ /*/                                   /***********************/                                      /*/
+/******************************************************************************************************/
+
 var types = ['Coffee', 'Pizza', 'Icecream', 'Buffet'];
 var count = 0;
+
+  /***************************************************/
+ /* Function to create objects of the data recieved */
+/***************************************************/
+
 var place = function(data) {
     this.id = count++;
     this.name = data.venue.name;
@@ -209,24 +273,43 @@ var place = function(data) {
     };
     this.address = data.venue.location.formattedAddress.join(" ");
 };
+
+  /*********************************************/
+ /* object for saving locations in categories */
+/*********************************************/
+
 var places = {
     Coffee: [],
     Pizza: [],
     Icecream: [],
     Buffet: []
 };
+
+  /********************************************************/
+ /* pushes places in places object arrays in object form */
+/********************************************************/
+
 var createPlaces = function(data, index) {
     data.forEach(function(i) {
         places[index].push(new place(i));
     });
 };
+
+  /****************************/
+ /* Main view model function */
+/****************************/
+
 var viewModel = function() {
     var self = this;
     this.categoryList = ko.observableArray([]);
     this.categoryList = types;
     this.currentCategory = ko.observable();
-    // this.currentCategory = ko.observable(this.categoryList[0]);
     this.listPlaces = ko.observableArray([]);
+
+      /****************************************************************/
+     /* Animates particular marker when an object in list is clicked */
+    /****************************************************************/
+
     this.showParticularMarker = function(marker) {
         markers.forEach(function(single) {
             if (single.title === marker) bouncingMarker = single;
@@ -235,6 +318,11 @@ var viewModel = function() {
         var largeInfoWindow = new google.maps.InfoWindow();
         populateInfoWindow(bouncingMarker, largeInfoWindow);
     }
+
+      /*******************************************/
+     /* populates list of places on click event */
+    /*******************************************/
+
     this.populate = function(type) {
         if(type.currentCategory()===undefined)
             return;
@@ -243,6 +331,12 @@ var viewModel = function() {
             self.listPlaces.push(places[type.currentCategory()][j].name);
         }
     };
+
+       /***************************************/
+      /* If none of the categories selected, */
+     /* then displays all locations in list */
+    /***************************************/
+
     this.allList = function() {
         self.listPlaces.removeAll();
         for(var i=0;i<4;i++){
@@ -251,6 +345,11 @@ var viewModel = function() {
             }
         }
     };
+
+      /***********************************************/
+     /* Changes category on selection from dropdown */
+    /***********************************************/
+
     this.changePlace = function() {
         hideMarkers();
         hideAllMarkers();
@@ -264,4 +363,6 @@ var viewModel = function() {
         }
     };
 };
-ko.applyBindings(new viewModel());
+
+var vm = new viewModel();
+ko.applyBindings(vm);
