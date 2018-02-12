@@ -41,6 +41,9 @@ function findArea() {
 
 function gps() {
     hideAllMarkers();
+    for (var i = 0; i < 4; i++) {
+        places[types[i]] = [];
+    }
     markers = [];
     allMarkers = [];
     navigator.geolocation.getCurrentPosition(function(position) {
