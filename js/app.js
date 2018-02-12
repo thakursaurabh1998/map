@@ -1,8 +1,8 @@
 var map, positionLive, livePos, spots;
 var markers = [];
 var allMarkers = [];
-var foursquare_client_id = "3VU3JPF4MALSI0PRWMV1VEVPWXO0HXACAEJDDNSB5GDHH0ZG"
-var foursquare_client_secret = "YSBYZX0VSOEQO45P2D0MDM5OHKDFWKGSBUZ0JJXDK4S2W0AZ"
+var foursquare_client_id = "3VU3JPF4MALSI0PRWMV1VEVPWXO0HXACAEJDDNSB5GDHH0ZG";
+var foursquare_client_secret = "YSBYZX0VSOEQO45P2D0MDM5OHKDFWKGSBUZ0JJXDK4S2W0AZ";
 var short, searchLocation, posMarker, last, lastInfoWindow, bouncingMarker;
   
   /****************************************/
@@ -13,14 +13,14 @@ function findArea() {
     hideAllMarkers();
     var geocoder = new google.maps.Geocoder();
     var address = $('#search-bar-text').val();
-    if (address == '') {
+    if (address === '') {
         window.alert('You have to enter query first!');
     } else {
         geocoder.geocode({
             address: address,
         }, function(results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
-                searchLocation = results[0].geometry.location
+                searchLocation = results[0].geometry.location;
                 map.setCenter(searchLocation);
                 map.setZoom(15);
                 searchLocation = {
@@ -50,7 +50,7 @@ function gps() {
         livePos = {
             lat: position.coords.latitude,
             lng: position.coords.longitude
-        }
+        };
         if (posMarker) posMarker.setMap(null);
         posMarker = new google.maps.Marker({
             position: livePos,
@@ -80,7 +80,7 @@ function showAllMarkers() {
         bounds.extend(allMarkers[i].position);
     }
     map.fitBounds(bounds);
-};
+}
 
   /********************/
  /* Initializing map */
@@ -130,7 +130,7 @@ function createJSON(livePos) {
     for (var i = 0; i < 4; i++) {
         places[types[i]] = [];
     }
-    var foursquareURL = `https://api.foursquare.com/v2/venues/explore?limit=5&ll=${livePos.lat},${livePos.lng}&client_id=${foursquare_client_id}&client_secret=${foursquare_client_secret}&v=20170801&query=`
+    var foursquareURL = `https://api.foursquare.com/v2/venues/explore?limit=5&ll=${livePos.lat},${livePos.lng}&client_id=${foursquare_client_id}&client_secret=${foursquare_client_secret}&v=20170801&query=`;
     types.forEach(function(type) {
         $.ajax({
             url: foursquareURL + type,
@@ -142,7 +142,7 @@ function createJSON(livePos) {
                 createMarkers(type);
             }
         }).error(function(){
-            Materialize.toast("Sorry, the Foursquare API service didn't responded.", 4000)
+            Materialize.toast("Sorry, the Foursquare API service didn't responded.", 4000);
         },8000);
     });
 }
@@ -325,7 +325,7 @@ var viewModel = function() {
         toggleBounce(bouncingMarker);
         var largeInfoWindow = new google.maps.InfoWindow();
         populateInfoWindow(bouncingMarker, largeInfoWindow);
-    }
+    };
 
       /*******************************************/
      /* populates list of places on click event */
