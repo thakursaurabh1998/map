@@ -53,6 +53,15 @@ body {
     max-height: 98%;
 }
 
+.overflow-save{
+    overflow:auto;
+    height:300px;
+}
+
+.row-corrector {
+    margin-bottom: 13px;
+}
+
 .floating-panel-open {
     position: absolute;
     bottom: 14px;
