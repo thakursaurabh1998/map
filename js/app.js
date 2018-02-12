@@ -8,6 +8,10 @@ var foursquare_client_secret = "YSBYZX0VSOEQO45P2D0MDM5OHKDFWKGSBUZ0JJXDK4S2W0AZ
 var short;
 var allMarkers=[];
 var searchLocation;
+var posMarker;
+var last;
+var lastInfoWindow;
+var bouncingMarker;
 
 
 function findArea() {
@@ -40,7 +44,10 @@ function gps() {
             lng: position.coords.longitude
         }
 
-        var posMarker = new google.maps.Marker({
+        if(posMarker)
+        	posMarker.setMap(null);
+
+        posMarker = new google.maps.Marker({
 	        position: livePos,
 	        title: `${position.lat} ${position.lng}`,
 	        icon: {
@@ -149,6 +156,7 @@ function createMarkers(type) {
 
         marker.addListener('click', function() {
             populateInfoWindow(this, largeInfoWindow);
+            toggleBounce(this);
         });
         bounds.extend(markers[i].position);
 
@@ -179,7 +187,22 @@ function hideMarkers() {
     hideAllMarkers();
 }
 
+function toggleBounce(marker) {
+    if(last)
+        last.setAnimation(null);
+
+    if (marker.getAnimation() !== null) {
+        marker.setAnimation(null);
+    } else {
+        marker.setAnimation(google.maps.Animation.BOUNCE);
+    }
+    last = marker;
+}
+
 function populateInfoWindow(marker, infoWindow) {
+    if(lastInfoWindow)
+        lastInfoWindow.close();
+
     if (infoWindow.marker != marker) {
         infoWindow.marker = marker;
         infoWindow.setContent(`<div><h6>${marker.title}</h6></div><div style="max-width:150px;"><strong>Address:</strong> ${marker.address}</div>`);
@@ -188,6 +211,7 @@ function populateInfoWindow(marker, infoWindow) {
             infoWindow.setMarker = null;
         });
     }
+    lastInfoWindow = infoWindow;
 }
 
 $(function() {
@@ -196,6 +220,7 @@ $(function() {
     $('#menu').click(function(){
     	$('#float').toggleClass('floating-panel-open');
     });
+    viewModel.populate;
 });
 
 
@@ -237,15 +262,38 @@ var createPlaces = function(data,index) {
 var viewModel = function() {
 	var self = this;
 	this.categoryList = ko.observableArray([]);
+
 	this.categoryList = types;
 
 	this.currentCategory = ko.observable();
+
+    this.currentCategory = ko.observable(this.categoryList[0]);
+
+    this.listPlaces = ko.observableArray([]);
+
+    this.showParticularMarker = function(marker){
+        markers.forEach(function(single){
+            if(single.title===marker)
+                bouncingMarker = single;
+        });
+        toggleBounce(bouncingMarker);
+        var largeInfoWindow = new google.maps.InfoWindow();
+        populateInfoWindow(bouncingMarker,largeInfoWindow);
+    }
+
+    this.populate = function(type) {
+        self.listPlaces.removeAll();
+        for(var j=0;j<5;j++){
+            self.listPlaces.push(places[type.currentCategory()][j].name);
+        }
+    };
 
 	this.changePlace = function() {
 		hideMarkers();
 		hideAllMarkers();
 		if(self.currentCategory()===undefined){
 			showAllMarkers();
+            self.populate();
 		} else {
 			createMarkers(self.currentCategory());
 			showMarkers();

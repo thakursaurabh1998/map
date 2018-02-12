@@ -47,9 +47,9 @@
                                             <label>Places</label>
                                         </div>
                                         <div class="col s6">
-                                            <button data-bind="click: changePlace" class="btn-pos full btn btn-small waves-effect waves-light blue" id="marker-disp">
+                                            <span data-bind="click: populate.bind($data)"><button data-bind="click: changePlace" class="btn-pos full btn btn-small waves-effect waves-light blue" id="marker-disp">
                                                 <i class="material-icons right">place</i>Show
-                                            </button>
+                                            </button></span>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -64,6 +64,12 @@
                                             </button>
                                         </div>
                                     </div>
+                                    <div class="card-content">
+                                        <h5 data-bind="text: currentCategory"></h5>
+                                        <div class="collection" data-bind="foreach: listPlaces">
+                                            <a href="#" class="collection-item" data-bind="text: $data, click: $parent.showParticularMarker.bind($data)"></a>
+                                      </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -71,19 +77,12 @@
                 </div>
             </li>
         </ul>
-        <!-- Tap Target Structure -->
-        <!-- <div class="tap-target" data-activates="menu">
-            <div class="tap-target-content">
-                <h5>Explore Zone</h5>
-                <p>You can search and filter places by visiting this menu. Special actions can also be found. Explore Google Maps in a whole new way.</p>
-            </div>
-        </div>
-    </div> -->
-        <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyBZmyyZG4VReSyxvi9tgTf7KbM7ElSgnn4&v=3&callback=initMap"></script>
-        <script src="js/jquery.min.js"></script>
-        <script src="js/knockout.js"></script>
-        <script src="materialize/js/materialize.min.js"></script>
-        <script src="js/app.js"></script>
+    </div>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyBZmyyZG4VReSyxvi9tgTf7KbM7ElSgnn4&v=3&callback=initMap"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/knockout.js"></script>
+    <script src="materialize/js/materialize.min.js"></script>
+    <script src="js/app.js"></script>
 </body>
 
 </html>

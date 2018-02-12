@@ -50,7 +50,7 @@ body {
     bottom: 14px;
     left: 14px;
     z-index: 5;
-    max-height: 90%;
+    max-height: 98%;
 }
 
 .floating-panel-open {
@@ -59,7 +59,7 @@ body {
     left: 14px;
     z-index: 5;
     right:14px;
-    max-height: 90%;
+    max-height: 98%;
 }
 
 .gps-floating-panel {
@@ -104,6 +104,6 @@ body {
         left: 14px;
         z-index: 5;
         right: calc( 100% - 519px );
-        max-height: 90%;
+        max-height: 98%;
     }
 }
