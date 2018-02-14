@@ -12,7 +12,7 @@ This is the second project of the Full Stack Nano Degree II by Udacity.
 * [jQuery](https://jquery.com)
 
 ---
-![Image mockup](../master/img/mockup.png)
+![Image mockup](../master/img/mockup.jpg)
 
 ---
 
