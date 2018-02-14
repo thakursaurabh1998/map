@@ -2,6 +2,7 @@
 <html>
 
 <head>
+    <title>Maps</title>
     <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!--Import materialize.css-->
@@ -13,7 +14,7 @@
 
 <body>
     <div id="map"></div>
-    <div class="gps-floating-panel"><a id="gps" class="btn-floating btn-large waves-effect waves-light blue"><i class="material-icons">my_location</i></a></div>
+    <div class="gps-floating-panel" data-bind="click: changePlace"><a data-bind="click: runGPS" id="gps" class="btn-floating btn-large waves-effect waves-light blue"><i class="material-icons">my_location</i></a></div>
     <div class="floating-panel-close" id="float">
         <ul class="collapsible noshadow borderN" data-collapsible="accordion">
             <li>
@@ -37,7 +38,7 @@
                                             <label for="search-bar-text">Enter places to search</label>
                                         </div>
                                         <div class="col s2">
-                                            <button class="btn-pos btn btn-small waves-effect waves-light blue" type="submit" id="search-button" name="action"><i class="material-icons">search</i>
+                                            <button class="btn-pos btn btn-small waves-effect waves-light blue" type="submit" id="search-button" name="action" data-bind="click: searchBTN"><i class="material-icons">search</i>
                                             </button>
                                         </div>
                                     </div>

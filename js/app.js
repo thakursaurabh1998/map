@@ -1,6 +1,7 @@
 var map, positionLive, livePos, spots;
 var markers = [];
 var allMarkers = [];
+var itemsProcessed;
 var foursquare_client_id = "3VU3JPF4MALSI0PRWMV1VEVPWXO0HXACAEJDDNSB5GDHH0ZG";
 var foursquare_client_secret = "YSBYZX0VSOEQO45P2D0MDM5OHKDFWKGSBUZ0JJXDK4S2W0AZ";
 var short, searchLocation, posMarker, last, lastInfoWindow, bouncingMarker;
@@ -35,13 +36,49 @@ function findArea() {
     }
 }
 
+
+   /************************************************/
+  /* Creating data in JSON format by making AJAX  */
+ /* calls asyncronously to the Foursquare server */
+/************************************************/
+
+function createJSON(livePos) {
+    hideAllMarkers();
+    allMarkers = [];
+    markers = [];
+    for (var i = 0; i < types.length; i++) {
+        places[types[i]] = [];
+    }
+    var foursquareURL = `https://api.foursquare.com/v2/venues/explore?limit=5&ll=${livePos.lat},${livePos.lng}&client_id=${foursquare_client_id}&client_secret=${foursquare_client_secret}&v=20170801&query=`;
+    itemsProcessed=0;
+    types.forEach(function(type) {
+        $.ajax({
+            url: foursquareURL + type,
+            method: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                spots = response.response.groups[0].items;
+                createPlaces(spots, type);
+                itemsProcessed++;
+                if(itemsProcessed===4)
+                {
+                    vm.changePlace();
+                }
+            }
+        }).error(function(){
+            Materialize.toast("Sorry, the Foursquare API service didn't responded.", 4000);
+        },8000);
+    });
+}
+
+
   /******************************************/
  /* Finding places by geolocation location */
 /******************************************/
 
 function gps() {
     hideAllMarkers();
-    for (var i = 0; i < 4; i++) {
+    for (var i = 0; i < types.length; i++) {
         places[types[i]] = [];
     }
     markers = [];
@@ -66,7 +103,16 @@ function gps() {
         posMarker.setMap(map);
         map.setCenter(livePos);
         map.setZoom(15);
+    }, function(){
+            livePos = {
+            lat: 40.7413549,
+            lng: -73.9980244
+        };
+        createJSON(livePos);
+        map.setCenter(livePos);
+        map.setZoom(15);
     });
+    
 }
 
   /**********************************************/
@@ -80,6 +126,36 @@ function showAllMarkers() {
         bounds.extend(allMarkers[i].position);
     }
     map.fitBounds(bounds);
+}
+
+
+  /******************************************/
+ /* Creating markers for all the locations */
+/******************************************/
+
+function createMarkers(type) {
+    hideAllMarkers();
+    markers = [];
+    var largeInfoWindow = new google.maps.InfoWindow();
+    var bounds = new google.maps.LatLngBounds();
+    for (var i = 0; i < places[type].length; i++) {
+        short = places[type];
+        var position = short[i].location;
+        var title = short[i].name;
+        var address = short[i].address;
+        var marker = new google.maps.Marker({
+            position: position,
+            title: title,
+            address: address,
+            animation: google.maps.Animation.DROP,
+            id: short[i].id
+        });
+        markers.push(marker);
+        allMarkers.push(marker);
+        markersProperties(marker,largeInfoWindow);
+        
+        bounds.extend(markers[i].position);
+    }
 }
 
   /********************/
@@ -99,53 +175,9 @@ function initMap() {
     });
     var largeInfoWindow = new google.maps.InfoWindow();
     var bounds = new google.maps.LatLngBounds();
-    createJSON(defaultLocation);
     gps();
-
-    /* Event listeners*/
-
-    $('#search-button').click(function() {
-        findArea();
-    });
-    $('#all-markers').click(function() {
-        showAllMarkers();
-    });
-    $('#marker-hide').click(function() {
-        hideMarkers();
-    });
-    $('#gps').click(function() {
-        gps();
-    });
 }
 
-   /************************************************/
-  /* Creating data in JSON format by making AJAX  */
- /* calls asyncronously to the Foursquare server */
-/************************************************/
-
-function createJSON(livePos) {
-    hideAllMarkers();
-    allMarkers = [];
-    markers = [];
-    for (var i = 0; i < 4; i++) {
-        places[types[i]] = [];
-    }
-    var foursquareURL = `https://api.foursquare.com/v2/venues/explore?limit=5&ll=${livePos.lat},${livePos.lng}&client_id=${foursquare_client_id}&client_secret=${foursquare_client_secret}&v=20170801&query=`;
-    types.forEach(function(type) {
-        $.ajax({
-            url: foursquareURL + type,
-            method: 'GET',
-            dataType: 'json',
-            success: function(response) {
-                spots = response.response.groups[0].items;
-                createPlaces(spots, type);
-                createMarkers(type);
-            }
-        }).error(function(){
-            Materialize.toast("Sorry, the Foursquare API service didn't responded.", 4000);
-        },8000);
-    });
-}
 
 function markersProperties(marker,largeInfoWindow) {
     marker.addListener('click',function(){populateInfoWindow(this, largeInfoWindow);});
@@ -154,34 +186,6 @@ function markersProperties(marker,largeInfoWindow) {
 
 
 
-  /******************************************/
- /* Creating markers for all the locations */
-/******************************************/
-
-function createMarkers(type) {
-    hideAllMarkers();
-    markers = [];
-    var largeInfoWindow = new google.maps.InfoWindow();
-    var bounds = new google.maps.LatLngBounds();
-    for (var i = 0; i < 5; i++) {
-        short = places[type];
-        var position = short[i].location;
-        var title = short[i].name;
-        var address = short[i].address;
-        var marker = new google.maps.Marker({
-            position: position,
-            title: title,
-            address: address,
-            animation: google.maps.Animation.DROP,
-            id: short[i].id
-        });
-        markers.push(marker);
-        allMarkers.push(marker);
-        markersProperties(marker,largeInfoWindow);
-        
-        bounds.extend(markers[i].position);
-    }
-}
 
   /**********************************************/
  /* Displaying markers for specific categories */
@@ -255,13 +259,10 @@ function populateInfoWindow(marker, infoWindow) {
 /*************************/
 
 $(function() {
-    // $('.tap-target').tapTarget('open');
     $('select').material_select();
     $('#menu').click(function() {
         $('#float').toggleClass('floating-panel-open');
     });
-    setTimeout(function(){ vm.changePlace(); }, 5000);
-    
 });
 
     /******************************************************************************************************/
@@ -303,9 +304,13 @@ var places = {
 /********************************************************/
 
 var createPlaces = function(data, index) {
+    var createdPlaces=0;
     data.forEach(function(i) {
         places[index].push(new place(i));
+        createdPlaces++;
+        createMarkers(index);
     });
+
 };
 
   /****************************/
@@ -318,6 +323,18 @@ var viewModel = function() {
     this.categoryList = types;
     this.currentCategory = ko.observable();
     this.listPlaces = ko.observableArray([]);
+
+      /*******************/
+     /* Event listeners */
+    /*******************/
+
+    this.runGPS = function() {
+        gps();
+    };
+
+    this.searchBTN = function() {
+        findArea();
+    };
 
       /****************************************************************/
      /* Animates particular marker when an object in list is clicked */
@@ -340,7 +357,7 @@ var viewModel = function() {
         if(type.currentCategory()===undefined)
             return;
         self.listPlaces.removeAll();
-        for (var j = 0; j < 5; j++) {
+        for (var j = 0; j < places[type.currentCategory()].length; j++) {
             self.listPlaces.push(places[type.currentCategory()][j].name);
         }
     };
@@ -352,9 +369,10 @@ var viewModel = function() {
 
     this.allList = function() {
         self.listPlaces.removeAll();
-        for(var i=0;i<4;i++){
-            for(var j=0;j<5;j++) {
-                self.listPlaces.push(places[types[i]][j].name);
+        for(var i=0;i<types.length;i++){
+            for(var j=0;j<places[types[i]].length;j++) {
+                if(places[types[i]][j].name!==undefined)
+                    self.listPlaces.push(places[types[i]][j].name);
             }
         }
     };

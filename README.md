@@ -7,8 +7,10 @@ This is the second project of the Full Stack Nano Degree II by Udacity.
 ### Frameworks/APIs used:
 * [KnockoutJS](https://knockoutjs.com)
 * [Google Maps API](https://developers.google.com/maps/)
+* [Foursquare API](https://developer.foursquare.com/)
 * [Material Theme](https://materializecss.com)
 * [jQuery](https://jquery.com)
+
 
 ---
 
