@@ -157,9 +157,7 @@ function createMarkers(type,allow) {
         });
         markers.push(marker);
         if(allow){
-            if(!!!(allMarkers.indexOf(marker)+1)){
-                allMarkers.push(marker);
-            }
+            allMarkers.push(marker);
         }
         markersProperties(marker,largeInfoWindow);
         if(markers.length)
