@@ -4,8 +4,13 @@ var allMarkers = [];
 var itemsProcessed;
 var foursquare_client_id = "3VU3JPF4MALSI0PRWMV1VEVPWXO0HXACAEJDDNSB5GDHH0ZG";
 var foursquare_client_secret = "YSBYZX0VSOEQO45P2D0MDM5OHKDFWKGSBUZ0JJXDK4S2W0AZ";
-var short, searchLocation, posMarker, last, lastInfoWindow, bouncingMarker;
+var short, searchLocation, posMarker, last, lastInfoWindow, bouncingMarker, doubleAllow=0;
   
+
+function errorCallbackMap(){
+    $("#map").text("Sorry Google Maps API can't be loaded");
+}
+
   /****************************************/
  /* Finding places by searching location */
 /****************************************/
@@ -49,7 +54,7 @@ function createJSON(livePos) {
     for (var i = 0; i < types.length; i++) {
         places[types[i]] = [];
     }
-    var foursquareURL = `https://api.foursquare.com/v2/venues/explore?limit=5&ll=${livePos.lat},${livePos.lng}&client_id=${foursquare_client_id}&client_secret=${foursquare_client_secret}&v=20170801&query=`;
+    var foursquareURL = `https://api.foursquare.com/v2/venues/explore?limit=5&range=3000&ll=${livePos.lat},${livePos.lng}&client_id=${foursquare_client_id}&client_secret=${foursquare_client_secret}&v=20170801&query=`;
     itemsProcessed=0;
     types.forEach(function(type) {
         $.ajax({
@@ -133,7 +138,7 @@ function showAllMarkers() {
  /* Creating markers for all the locations */
 /******************************************/
 
-function createMarkers(type) {
+function createMarkers(type,allow) {
     hideAllMarkers();
     markers = [];
     var largeInfoWindow = new google.maps.InfoWindow();
@@ -144,6 +149,7 @@ function createMarkers(type) {
         var title = short[i].name;
         var address = short[i].address;
         var marker = new google.maps.Marker({
+            id: short[i].id,
             position: position,
             title: title,
             address: address,
@@ -151,10 +157,17 @@ function createMarkers(type) {
             id: short[i].id
         });
         markers.push(marker);
-        allMarkers.push(marker);
+        if(allow){
+            if(!allMarkers.find(function(a){
+                if(a.id===marker.id)
+                    return 1;
+            })){
+                allMarkers.push(marker);
+            }
+        }
         markersProperties(marker,largeInfoWindow);
-        
-        bounds.extend(markers[i].position);
+        if(markers.length)
+            bounds.extend(markers[i].position);
     }
 }
 
@@ -194,11 +207,14 @@ function markersProperties(marker,largeInfoWindow) {
 function showMarkers() {
     hideAllMarkers();
     var bounds = new google.maps.LatLngBounds();
-    for (var i = 0; i < markers.length; i++) {
-        markers[i].setMap(map);
-        bounds.extend(markers[i].position);
+    if(markers.length){
+        for (var i = 0; i < markers.length; i++) {
+            markers[i].setMap(map);
+            bounds.extend(markers[i].position);
+        }
+        map.fitBounds(bounds);
     }
-    map.fitBounds(bounds);
+        
 }
 
   /************************************/
@@ -308,7 +324,8 @@ var createPlaces = function(data, index) {
     data.forEach(function(i) {
         places[index].push(new place(i));
         createdPlaces++;
-        createMarkers(index);
+        doubleAllow=0;
+        createMarkers(index,1);
     });
 
 };
@@ -334,6 +351,7 @@ var viewModel = function() {
 
     this.searchBTN = function() {
         findArea();
+        self.currentCategory = ko.observable();
     };
 
       /****************************************************************/
@@ -389,7 +407,7 @@ var viewModel = function() {
             showAllMarkers();
             self.allList();
         } else {
-            createMarkers(self.currentCategory());
+            createMarkers(self.currentCategory(),0);
             showMarkers();
         }
     };

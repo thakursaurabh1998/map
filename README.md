@@ -11,6 +11,8 @@ This is the second project of the Full Stack Nano Degree II by Udacity.
 * [Material Theme](https://materializecss.com)
 * [jQuery](https://jquery.com)
 
+---
+![Image mockup](../master/img/mockup.png)
 
 ---
 
@@ -39,5 +41,3 @@ Steps:
 * User can also search for a location and can receive suggestions for the searched location.
 * Autocompletion API completes the location search while the user is typing the location.
 * This website runs on material theme and is completely responsive and works beautifully for mobile devices as well as desktops.
----
-![Image mockup](../master/img/mockup.png)
