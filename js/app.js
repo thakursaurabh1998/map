@@ -153,11 +153,16 @@ function createMarkers(type,allow) {
             position: position,
             title: title,
             address: address,
-            animation: google.maps.Animation.DROP
+            animation: google.maps.Animation.DROP,
         });
         markers.push(marker);
         if(allow){
-            allMarkers.push(marker);
+            if(!allMarkers.find(function(a){
+                if(a.id===marker.id)
+                    return 1;
+            })){
+                allMarkers.push(marker);
+            }
         }
         markersProperties(marker,largeInfoWindow);
         if(markers.length)
